@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HyuneApplication<hyune>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.ojt.hyune.HyuneApplication",
+            "projectName": "hyune",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-HyuneApplicationTests<hyune>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.ojt.hyune.HyuneApplicationTests",
+            "projectName": "hyune",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
