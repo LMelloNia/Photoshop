@@ -1,3 +1,6 @@
+server:
+  port: 8282
+
 spring:
     dataSource:
         url: jdbc:mysql://localhost:3306/scottdb
