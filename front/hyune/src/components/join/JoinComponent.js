@@ -19,7 +19,7 @@ const JoinComponent = () => {
         console.log(user)
         registerUser(user).then((result) => {
             console.log(result);
-            setUser({...initState});
+            // setUser({...initState});
         })
         .catch((e) => {
             console.error(e);

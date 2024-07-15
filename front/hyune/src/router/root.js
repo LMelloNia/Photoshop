@@ -4,6 +4,7 @@ const Loading = <div>Loading...</div>;
 
 const Join = lazy(() => import("../pages/join/Join"))
 const ImageEditor = lazy(() => import("../pages/imageEditor/ImageEditor"))
+const Login = lazy(() => import("../pages/login/Login"))
 
 const root = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const root = createBrowserRouter([
     path: "/join",
     element: <Suspense fallback={Loading}><Join /></Suspense>,
   },
+  {
+    path: "/login",
+    element: <Suspense fallback={Loading}><Login /></Suspense>,
+  }
 ]);
 
 export default root;

@@ -8,5 +8,10 @@ export const registerUser = async (user) => {
             'Content-Type': 'application/json',
         },
     });
-    return res.data
+    return res.data;
+}
+
+export const loginUser = async (user) => {
+    const res = await axios.post(`${API_SERVER_HOST}/api/login`, user);
+    return res.data;
 }
