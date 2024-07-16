@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import ImageEditor from '@toast-ui/react-image-editor';
 import { getUserIdFromToken } from '../../util/jwtDecode';
-import { useNavigate } from 'react-router-dom';
+import { saveAs } from 'file-saver';
 
 const myTheme = {
   'common.bi.image': '',
@@ -155,16 +155,21 @@ var locale_ko_KR = {
 
 const ImageEditorComponent = () => {
   const editorRef = useRef(null);
-  // const navigate = useNavigate();
   useEffect(() => {
     const userId = getUserIdFromToken();
     if(!userId) {
       alert("로그인이 필요합니다.")
-      // navigate("/login")
-      // window.history.pushState({}, '', '/login');
       window.location.href = "/login";
     }
   }, [])
+
+  const handleDownload = () => {
+    if (editorRef.current) {
+      const editorInstance = editorRef.current.getInstance();
+      const dataURL = editorInstance.toDataURL();
+      saveAs(dataURL, 'edited-image.png');
+    }
+  };
 
   return (
     <div className="App">
@@ -193,6 +198,7 @@ const ImageEditorComponent = () => {
         }}
         usageStatistics={true}
       />
+      <button onClick={handleDownload}>Download</button>
     </div>
   );
 }
