@@ -12,6 +12,21 @@ export const registerUser = async (user) => {
 }
 
 export const loginUser = async (user) => {
-    const res = await axios.post(`${API_SERVER_HOST}/api/login`, user);
-    return res.data;
+    try {
+        const res = await axios.post(`${API_SERVER_HOST}/api/login`, user, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        // console.log('Login response:', res);
+        const token = res.data.token;
+
+        // 토큰을 sessionStorage에 저장
+        sessionStorage.setItem('accessToken', token);
+
+        return res.data;
+    } catch (error) {
+        console.error('Error logging in:', error);
+        throw error;
+    }
 }

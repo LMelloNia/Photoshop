@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/UserApi"
 
 const initState = {
@@ -7,6 +8,7 @@ const initState = {
 }
 
 const LoginComponent = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState({ ...initState })
 
     const handleChangeUser = (e) => {
@@ -17,8 +19,9 @@ const LoginComponent = () => {
     const handleClickLogin = () => {
         console.log(user)
         loginUser(user).then((result) => {
-            console.log(result);
+            // console.log(result);
             setUser({ ...initState });
+            navigate(-1);
         })
         .catch((e) => {
             console.error(e);

@@ -38,17 +38,13 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
-    }
-
-    private String createToken(Map<String, Object> claims, String subject) {
+    public String createToken(Integer userNo, String userId, String userNick) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
+                .claim("userNo", userNo)
+                .claim("userId", userId)
+                .claim("userNick", userNick)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3))
                 .signWith(SECRET_KEY)
                 .compact();
     }

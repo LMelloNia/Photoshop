@@ -1,6 +1,10 @@
 package com.ojt.hyune.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +26,16 @@ public class LoginController {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/api/login")
-    public String createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<Map<String, String>> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         UserDTO userDTO = userService.findByUserId(authRequest.getUserId());
-        
+
         if (userDTO == null || !passwordEncoder.matches(authRequest.getUserPassword(), userDTO.getUserPassword())) {
             throw new Exception("Incorrect username or password");
         }
 
-        return jwtUtil.generateToken(userDTO.getUserId());
+        String token = jwtUtil.createToken(userDTO.getUserNo(), userDTO.getUserId(), userDTO.getUserNick());
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return ResponseEntity.ok(response);
     }
 }

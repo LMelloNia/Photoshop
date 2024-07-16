@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {registerUser} from "../../api/UserApi"
+import { useNavigate } from "react-router-dom";
 
 const initState = {
     userId: "",
@@ -8,6 +9,7 @@ const initState = {
 }
 
 const JoinComponent = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState({...initState})
 
     const handleChangeUser = (e) => {
@@ -19,7 +21,8 @@ const JoinComponent = () => {
         console.log(user)
         registerUser(user).then((result) => {
             console.log(result);
-            // setUser({...initState});
+            setUser({...initState});
+            navigate(-1);
         })
         .catch((e) => {
             console.error(e);
