@@ -1,83 +1,84 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import ImageEditor from '@toast-ui/react-image-editor';
 import { getUserIdFromToken } from '../../util/jwtDecode';
 import { saveAs } from 'file-saver';
+import { uploadImage, getUserImages } from '../../api/ImageApi';
 
 const myTheme = {
   'common.bi.image': '',
-    'common.bisize.width': '0',
-    'common.bisize.height': '0',
-    'common.backgroundImage': 'none',
-    'common.backgroundColor': '#ffffff',
-    'common.border': '0px',
+  'common.bisize.width': '0',
+  'common.bisize.height': '0',
+  'common.backgroundImage': 'none',
+  'common.backgroundColor': '#ffffff',
+  'common.border': '0px',
 
-    // header
-    'header.backgroundImage': 'none',
-    'header.backgroundColor': 'transparent',
-    'header.border': '0px',
+  // header
+  'header.backgroundImage': 'none',
+  'header.backgroundColor': 'transparent',
+  'header.border': '0px',
 
-    // load button
-    'loadButton.backgroundColor': '#fff',
-    'loadButton.border': '1px solid #ddd',
-    'loadButton.color': '#222',
-    'loadButton.fontFamily': 'NotoSans, sans-serif',
-    'loadButton.fontSize': '12px',
+  // load button
+  'loadButton.backgroundColor': '#fff',
+  'loadButton.border': '1px solid #ddd',
+  'loadButton.color': '#222',
+  'loadButton.fontFamily': 'NotoSans, sans-serif',
+  'loadButton.fontSize': '12px',
 
-    // download button
-    'downloadButton.backgroundColor': '#3ba26e',
-    'downloadButton.border': '1px solid #3ba26e',
-    'downloadButton.color': '#fff',
-    'downloadButton.fontFamily': 'NotoSans, sans-serif',
-    'downloadButton.fontSize': '12px',
+  // download button
+  'downloadButton.backgroundColor': '#3ba26e',
+  'downloadButton.border': '1px solid #3ba26e',
+  'downloadButton.color': '#fff',
+  'downloadButton.fontFamily': 'NotoSans, sans-serif',
+  'downloadButton.fontSize': '12px',
 
-    // icons default
-    'menu.normalIcon.color': '#8a8a8a',
-    'menu.activeIcon.color': '#555555',
-    'menu.disabledIcon.color': '#434343',
-    'menu.hoverIcon.color': '#e9e9e9',
-    'submenu.normalIcon.color': '#8a8a8a',
-    'submenu.activeIcon.color': '#e9e9e9',
+  // icons default
+  'menu.normalIcon.color': '#8a8a8a',
+  'menu.activeIcon.color': '#555555',
+  'menu.disabledIcon.color': '#434343',
+  'menu.hoverIcon.color': '#e9e9e9',
+  'submenu.normalIcon.color': '#8a8a8a',
+  'submenu.activeIcon.color': '#e9e9e9',
 
-    'menu.iconSize.width': '24px',
-    'menu.iconSize.height': '24px',
-    'submenu.iconSize.width': '32px',
-    'submenu.iconSize.height': '32px',
+  'menu.iconSize.width': '24px',
+  'menu.iconSize.height': '24px',
+  'submenu.iconSize.width': '32px',
+  'submenu.iconSize.height': '32px',
 
-    // submenu primary color
-    'submenu.backgroundColor': '#ffffff',
-    'submenu.partition.color': '#858585',
+  // submenu primary color
+  'submenu.backgroundColor': '#ffffff',
+  'submenu.partition.color': '#858585',
 
-    // submenu labels
-    'submenu.normalLabel.color': '#000',
-    'submenu.normalLabel.fontWeight': 'bold',
-    'submenu.activeLabel.color': '#000',
-    'submenu.activeLabel.fontWeight': 'bold',
+  // submenu labels
+  'submenu.normalLabel.color': '#000',
+  'submenu.normalLabel.fontWeight': 'bold',
+  'submenu.activeLabel.color': '#000',
+  'submenu.activeLabel.fontWeight': 'bold',
 
-    // checkbox style
-    'checkbox.border': '1px solid #ccc',
-    'checkbox.backgroundColor': '#fff',
+  // checkbox style
+  'checkbox.border': '1px solid #ccc',
+  'checkbox.backgroundColor': '#fff',
 
-    // rango style
-    'range.pointer.color': '#3ba26e',
-    'range.bar.color': '#666',
-    'range.subbar.color': '#d1d1d1',
+  // rango style
+  'range.pointer.color': '#3ba26e',
+  'range.bar.color': '#666',
+  'range.subbar.color': '#d1d1d1',
 
-    'range.disabledPointer.color': '#ddd',
-    'range.disabledBar.color': '#ddd',
-    'range.disabledSubbar.color': '#ddd',
+  'range.disabledPointer.color': '#ddd',
+  'range.disabledBar.color': '#ddd',
+  'range.disabledSubbar.color': '#ddd',
 
-    'range.value.color': '#fff',
-    'range.value.fontWeight': 'lighter',
-    'range.value.fontSize': '11px',
-    'range.value.border': '1px solid #353535',
-    'range.value.backgroundColor': '#151515',
-    'range.title.color': '#fff',
-    'range.title.fontWeight': 'lighter',
+  'range.value.color': '#fff',
+  'range.value.fontWeight': 'lighter',
+  'range.value.fontSize': '11px',
+  'range.value.border': '1px solid #353535',
+  'range.value.backgroundColor': '#151515',
+  'range.title.color': '#fff',
+  'range.title.fontWeight': 'lighter',
 
-    // colorpicker style
-    'colorpicker.button.border': '1px solid #1e1e1e',
-    'colorpicker.title.color': '#fff'
+  // colorpicker style
+  'colorpicker.button.border': '1px solid #1e1e1e',
+  'colorpicker.title.color': '#fff'
 };
 
 var locale_ko_KR = {
@@ -155,26 +156,72 @@ var locale_ko_KR = {
 
 const ImageEditorComponent = () => {
   const editorRef = useRef(null);
+  const [virtualName, setVirtualName] = useState('');
+  const [imageUrl, setImageUrl] = useState(null);
+
   useEffect(() => {
     const userId = getUserIdFromToken();
-    if(!userId) {
-      alert("로그인이 필요합니다.")
+    if (!userId) {
+      alert("로그인이 필요합니다.");
       window.location.href = "/login";
+    } else {
+      getUserImages(userId)
+        .then(response => {
+          if (response.length > 0) {
+            setImageUrl(`http://localhost:8282/upload/${response[0].imageName}`);
+          }
+        })
+        .catch(error => {
+          console.error("Error loading images:", error);
+        });
     }
-  }, [])
+  }, []);
 
-  const handleDownload = () => {
+  useEffect(() => {
+    if (imageUrl && editorRef.current) {
+      const editorInstance = editorRef.current.getInstance();
+      editorInstance.loadImageFromURL(imageUrl, 'Loaded Image')
+        .then(() => {
+          console.log("Image loaded successfully");
+        })
+        .catch(error => {
+          console.error("Error loading image:", error);
+        });
+    }
+  }, [imageUrl]);
+
+
+
+  const handleSaveImage = async () => {
     if (editorRef.current) {
       const editorInstance = editorRef.current.getInstance();
       const dataURL = editorInstance.toDataURL();
-      saveAs(dataURL, 'edited-image.png');
+
+      const userId = getUserIdFromToken();
+
+      const imageUploadRequest = {
+        image: dataURL,
+        userId: userId,
+        virtualName: virtualName
+      };
+
+      try {
+        const response = await uploadImage(imageUploadRequest);
+        console.log("Image uploaded successfully:", response);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
+  };
+
+  const handleNameChange = (e) => {
+    setVirtualName(e.target.value);
   };
 
   return (
     <div className="App">
       <ImageEditor
-      ref={editorRef}
+        ref={editorRef}
         includeUI={{
           loadImage: {
             path: 'img/sampleImage.jpg',
@@ -190,15 +237,21 @@ const ImageEditorComponent = () => {
           },
           menuBarPosition: 'bottom',
         }}
-        cssMaxHeight={2000}
-        cssMaxWidth={1500}
+        cssMaxHeight={1500}
+        cssMaxWidth={1000}
         selectionStyle={{
           cornerSize: 20,
           rotatingPointOffset: 70,
         }}
         usageStatistics={true}
       />
-      <button onClick={handleDownload}>Download</button>
+      <input
+        type="text"
+        placeholder="이미지의 가상 이름을 입력하세요"
+        value={virtualName}
+        onChange={handleNameChange}
+      />
+      <button onClick={handleSaveImage}>Save Image</button>
     </div>
   );
 }
