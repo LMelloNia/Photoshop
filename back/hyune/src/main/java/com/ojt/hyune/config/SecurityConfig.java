@@ -19,6 +19,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/user/**", "/api/login", "/api/**", "/upload/**", "/api/image/**", "/api/board/**").permitAll()
                 .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(oAuth2UserService())
+                )
+                .defaultSuccessUrl("http://localhost:3000", true) // 리디렉션할 URL을 설정
+                .failureUrl("/login?error=true")
             );
 
         return http.build();
@@ -27,5 +34,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomOAuth2UserService oAuth2UserService() {
+        return new CustomOAuth2UserService();
     }
 }

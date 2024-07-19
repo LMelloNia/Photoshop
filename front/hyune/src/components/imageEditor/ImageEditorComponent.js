@@ -5,82 +5,6 @@ import { getUserIdFromToken } from '../../util/jwtDecode';
 import { saveAs } from 'file-saver';
 import { uploadImage, getUserImages } from '../../api/ImageApi';
 
-const myTheme = {
-  'common.bi.image': '',
-  'common.bisize.width': '0',
-  'common.bisize.height': '0',
-  'common.backgroundImage': 'none',
-  'common.backgroundColor': '#ffffff',
-  'common.border': '0px',
-
-  // header
-  'header.backgroundImage': 'none',
-  'header.backgroundColor': 'transparent',
-  'header.border': '0px',
-
-  // load button
-  'loadButton.backgroundColor': '#fff',
-  'loadButton.border': '1px solid #ddd',
-  'loadButton.color': '#222',
-  'loadButton.fontFamily': 'NotoSans, sans-serif',
-  'loadButton.fontSize': '12px',
-
-  // download button
-  'downloadButton.backgroundColor': '#3ba26e',
-  'downloadButton.border': '1px solid #3ba26e',
-  'downloadButton.color': '#fff',
-  'downloadButton.fontFamily': 'NotoSans, sans-serif',
-  'downloadButton.fontSize': '12px',
-
-  // icons default
-  'menu.normalIcon.color': '#8a8a8a',
-  'menu.activeIcon.color': '#555555',
-  'menu.disabledIcon.color': '#434343',
-  'menu.hoverIcon.color': '#e9e9e9',
-  'submenu.normalIcon.color': '#8a8a8a',
-  'submenu.activeIcon.color': '#e9e9e9',
-
-  'menu.iconSize.width': '24px',
-  'menu.iconSize.height': '24px',
-  'submenu.iconSize.width': '32px',
-  'submenu.iconSize.height': '32px',
-
-  // submenu primary color
-  'submenu.backgroundColor': '#ffffff',
-  'submenu.partition.color': '#858585',
-
-  // submenu labels
-  'submenu.normalLabel.color': '#000',
-  'submenu.normalLabel.fontWeight': 'bold',
-  'submenu.activeLabel.color': '#000',
-  'submenu.activeLabel.fontWeight': 'bold',
-
-  // checkbox style
-  'checkbox.border': '1px solid #ccc',
-  'checkbox.backgroundColor': '#fff',
-
-  // rango style
-  'range.pointer.color': '#3ba26e',
-  'range.bar.color': '#666',
-  'range.subbar.color': '#d1d1d1',
-
-  'range.disabledPointer.color': '#ddd',
-  'range.disabledBar.color': '#ddd',
-  'range.disabledSubbar.color': '#ddd',
-
-  'range.value.color': '#fff',
-  'range.value.fontWeight': 'lighter',
-  'range.value.fontSize': '11px',
-  'range.value.border': '1px solid #353535',
-  'range.value.backgroundColor': '#151515',
-  'range.title.color': '#fff',
-  'range.title.fontWeight': 'lighter',
-
-  // colorpicker style
-  'colorpicker.button.border': '1px solid #1e1e1e',
-  'colorpicker.title.color': '#fff'
-};
-
 var locale_ko_KR = {
   Apply: '적용',
   Arrow: '화살표',
@@ -219,7 +143,7 @@ const ImageEditorComponent = () => {
   };
 
   return (
-    <div className="App">
+    <div className="flex">
       <ImageEditor
         ref={editorRef}
         includeUI={{
@@ -227,17 +151,16 @@ const ImageEditorComponent = () => {
             path: 'img/sampleImage.jpg',
             name: 'SampleImage',
           },
-          locale: locale_ko_KR, // key-value object with localization
-          // theme: myTheme,
+          locale: locale_ko_KR,
           menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter'],
           initMenu: 'filter',
           uiSize: {
-            width: '1500px',
-            height: '1000px',
+            width: '1000px',
+            height: '700px',
           },
           menuBarPosition: 'bottom',
         }}
-        cssMaxHeight={1500}
+        cssMaxHeight={700}
         cssMaxWidth={1000}
         selectionStyle={{
           cornerSize: 20,
@@ -245,13 +168,21 @@ const ImageEditorComponent = () => {
         }}
         usageStatistics={true}
       />
-      <input
-        type="text"
-        placeholder="이미지의 가상 이름을 입력하세요"
-        value={virtualName}
-        onChange={handleNameChange}
-      />
-      <button onClick={handleSaveImage}>Save Image</button>
+      <div className="flex flex-col items-start ml-4">
+        <input
+          type="text"
+          placeholder="저장할 이름 입력"
+          value={virtualName}
+          onChange={handleNameChange}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
+        />
+        <button
+          onClick={handleSaveImage}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          이미지 저장
+        </button>
+      </div>
     </div>
   );
 }

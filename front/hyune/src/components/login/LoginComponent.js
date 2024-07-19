@@ -7,9 +7,10 @@ const initState = {
     userPassword: ""
 }
 
+
 const LoginComponent = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState({ ...initState })
+    const [user, setUser] = useState({ ...initState });
 
     const handleChangeUser = (e) => {
         user[e.target.name] = e.target.value;
@@ -17,16 +18,18 @@ const LoginComponent = () => {
     };
 
     const handleClickLogin = () => {
-        console.log(user)
         loginUser(user).then((result) => {
-            // console.log(result);
             setUser({ ...initState });
             navigate(-1);
         })
         .catch((e) => {
             console.error(e);
         });
-    }
+    };
+
+    const handleNaverLogin = () => {
+        window.location.href = "http://localhost:8282/oauth2/authorization/naver";
+    };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -64,6 +67,12 @@ const LoginComponent = () => {
                         onClick={handleClickLogin}
                     >
                         로그인
+                    </button>
+                    <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        onClick={handleNaverLogin}
+                    >
+                        네이버 로그인
                     </button>
                 </div>
             </div>

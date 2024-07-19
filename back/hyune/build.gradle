@@ -44,6 +44,10 @@ dependencies {
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'  // JAXB 의존성 추가
     implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.2'  // JAXB 런타임 의존성 추가
+
+	// 소셜로그인
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {
