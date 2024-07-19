@@ -7,10 +7,28 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.ojt.hyune.domain.User;
+import com.ojt.hyune.jwt.JwtUtil;
+import com.ojt.hyune.repository.UserRepository;
+
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+
+    public SecurityConfig(CustomOAuth2UserService oAuth2UserService, JwtUtil jwtUtil, UserRepository userRepository) {
+        this.oAuth2UserService = oAuth2UserService;
+        this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -22,22 +40,28 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
-                    .userService(oAuth2UserService())
+                    .userService(oAuth2UserService)
                 )
-                .defaultSuccessUrl("http://localhost:3000", true) // 리디렉션할 URL을 설정
+                .successHandler(authenticationSuccessHandler())
                 .failureUrl("/login?error=true")
             );
 
         return http.build();
     }
+    
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+            User user = userRepository.findByUserId(oAuth2User.getUser().getUserId()).orElseThrow();
+            String token = jwtUtil.createToken(user.getUserNo(), user.getUserId(), user.getUserNick());
+
+            response.sendRedirect("http://localhost:3000/auth?token=" + token);
+        };
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CustomOAuth2UserService oAuth2UserService() {
-        return new CustomOAuth2UserService();
     }
 }

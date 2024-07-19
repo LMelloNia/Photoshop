@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ojt.hyune.repository.UserRepository;
 import com.ojt.hyune.domain.User;
+import com.ojt.hyune.jwt.JwtUtil;
 
 import java.util.Collections;
 import java.util.Map;
@@ -42,10 +43,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 return userRepository.save(newUser);
             });
 
-        return new DefaultOAuth2User(
+        return new CustomOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
             attributes,
-            userNameAttributeName
+            userNameAttributeName,
+            user
         );
     }
 }

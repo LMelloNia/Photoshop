@@ -7,11 +7,16 @@ const Join = lazy(() => import("../pages/join/Join"))
 const Main = lazy(() => import("../pages/Main"))
 const Login = lazy(() => import("../pages/login/Login"))
 const ImageEditor = lazy(() => import("../pages/imageEditor/ImageEditor"))
+const Auth = lazy(() => import("../pages/auth/AuthPage"))
 
 const root = createBrowserRouter([
   {
     path: "",
     element: <Suspense fallback={Loading}><Main /></Suspense>,
+  },
+  {
+    path: "auth",
+    element: <Suspense fallback={Loading}><Auth /></Suspense>,
   },
   {
     path: "/join",
