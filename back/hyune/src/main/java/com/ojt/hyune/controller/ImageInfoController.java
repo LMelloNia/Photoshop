@@ -26,8 +26,8 @@ public class ImageInfoController {
     public String uploadImage(@RequestBody ImageUploadRequest request) throws IOException {
         return imageInfoService.uploadImage(request);
     }
-    
-        @GetMapping("/user/{userId}")
+
+    @GetMapping("/user/{userId}")
     public List<ImageInfo> getImagesByUserId(@PathVariable String userId) {
         return imageInfoService.getImagesByUserId(userId);
     }

@@ -13,3 +13,17 @@ export const getUserIdFromToken = () => {
         return null;
     }
 }
+
+export const getUserNickFromToken = () => {
+    const token = sessionStorage.getItem('accessToken');
+    if (!token) {
+        return null;
+    }
+    try {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.userNick;
+    } catch (e) {
+        console.error('Invalid token', e);
+        return null;
+    }
+}

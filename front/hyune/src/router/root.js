@@ -1,4 +1,5 @@
-import {Suspense, lazy} from "react";
+import boardRouter from "./boardRouter";
+import { Suspense, lazy } from "react";
 const { createBrowserRouter } = require("react-router-dom");
 const Loading = <div>Loading...</div>;
 
@@ -10,7 +11,7 @@ const ImageEditor = lazy(() => import("../pages/imageEditor/ImageEditor"))
 const root = createBrowserRouter([
   {
     path: "",
-    element: <Suspense fallback={Loading}><Main/></Suspense>,
+    element: <Suspense fallback={Loading}><Main /></Suspense>,
   },
   {
     path: "/join",
@@ -23,7 +24,11 @@ const root = createBrowserRouter([
   {
     path: "/image-editor",
     element: <Suspense fallback={Loading}><ImageEditor /></Suspense>,
-  }
+  },
+  {
+    path: "board",
+    children: boardRouter()
+  },
 ]);
 
 export default root;

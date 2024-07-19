@@ -23,7 +23,7 @@ const Header = () => {
           {isLoggedIn ? (
             <>
               <span className="text-gray-800 hover:text-gray-600 cursor-pointer" onClick={handleLogout}>로그아웃</span>
-              <Link to="/mypage" className="text-gray-800 hover:text-gray-600">마이페이지</Link>
+              {/* <Link to="/mypage" className="text-gray-800 hover:text-gray-600">마이페이지</Link> */}
             </>
           ) : (
             <Link to="/login" className="text-gray-800 hover:text-gray-600">로그인</Link>
