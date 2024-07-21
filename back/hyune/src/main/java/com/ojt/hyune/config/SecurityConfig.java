@@ -13,22 +13,18 @@ import com.ojt.hyune.domain.User;
 import com.ojt.hyune.jwt.JwtUtil;
 import com.ojt.hyune.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
     private final CustomOAuth2UserService oAuth2UserService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
-
-    public SecurityConfig(CustomOAuth2UserService oAuth2UserService, JwtUtil jwtUtil, UserRepository userRepository) {
-        this.oAuth2UserService = oAuth2UserService;
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,7 +44,7 @@ public class SecurityConfig {
 
         return http.build();
     }
-    
+
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
