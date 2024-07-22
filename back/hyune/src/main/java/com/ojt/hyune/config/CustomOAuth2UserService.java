@@ -9,12 +9,16 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ojt.hyune.repository.UserRepository;
+
+import lombok.extern.log4j.Log4j2;
+
 import com.ojt.hyune.domain.User;
 import com.ojt.hyune.jwt.JwtUtil;
 
 import java.util.Collections;
 import java.util.Map;
 
+@Log4j2
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -32,15 +36,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         String email = (String) response.get("email");
-        String name = (String) response.get("name");
-
+        String name = (String) response.get("nickname");
         User user = userRepository.findByUserId(email)
             .orElseGet(() -> {
                 User newUser = User.builder()
                     .userId(email)
                     .userNick(name)
                     .build();
-                return userRepository.save(newUser);
+                User saveUser =  userRepository.save(newUser);
+                return saveUser;
             });
 
         return new CustomOAuth2User(

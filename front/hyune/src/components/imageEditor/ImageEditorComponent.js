@@ -82,6 +82,8 @@ const ImageEditorComponent = () => {
   const editorRef = useRef(null);
   const [virtualName, setVirtualName] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
+  const [imageList, setImageList] = useState([]);
+  const [selectedImage, setSelectedImage] = useState('');
 
   useEffect(() => {
     const userId = getUserIdFromToken();
@@ -92,7 +94,7 @@ const ImageEditorComponent = () => {
       getUserImages(userId)
         .then(response => {
           if (response.length > 0) {
-            setImageUrl(`http://localhost:8282/upload/${response[0].imageName}`);
+            setImageList(response);
           }
         })
         .catch(error => {
@@ -142,6 +144,15 @@ const ImageEditorComponent = () => {
     setVirtualName(e.target.value);
   };
 
+  const handleImageChange = (e) => {
+    const selectedVirtualName = e.target.value;
+    const selectedImageObject = imageList.find(img => img.virtualName === selectedVirtualName);
+    if (selectedImageObject) {
+      setImageUrl(`http://localhost:8282/upload/${selectedImageObject.imageName}`);
+      setSelectedImage(selectedVirtualName);
+    }
+  };
+
   return (
     <div className="flex">
       <ImageEditor
@@ -169,6 +180,17 @@ const ImageEditorComponent = () => {
         usageStatistics={true}
       />
       <div className="flex flex-col items-start ml-4">
+        <select
+          value={selectedImage}
+          onChange={handleImageChange}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
+        >
+          {imageList.map(img => (
+            <option key={img.imageName} value={img.virtualName}>
+              {img.virtualName}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           placeholder="저장할 이름 입력"
