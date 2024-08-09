@@ -118,7 +118,7 @@ const ImageEditorComponent = () => {
 
 
 
-  const handleSaveImage = async () => {
+const handleSaveImage = async () => {
     if (editorRef.current) {
       const editorInstance = editorRef.current.getInstance();
       const dataURL = editorInstance.toDataURL();
@@ -134,11 +134,13 @@ const ImageEditorComponent = () => {
       try {
         const response = await uploadImage(imageUploadRequest);
         console.log("Image uploaded successfully:", response);
+        alert("이미지가 성공적으로 저장되었습니다.");  // 알림 추가
+        setVirtualName('');  // 텍스트 필드 초기화
       } catch (error) {
         console.error("Error uploading image:", error);
       }
     }
-  };
+};
 
   const handleNameChange = (e) => {
     setVirtualName(e.target.value);
@@ -152,22 +154,21 @@ const ImageEditorComponent = () => {
       setSelectedImage(selectedVirtualName);
     }
   };
-
   return (
     <div className="flex">
       <ImageEditor
         ref={editorRef}
         includeUI={{
           loadImage: {
-            path: 'img/sampleImage.jpg',
-            name: 'SampleImage',
+            path: '', // 초기에는 이미지를 불러오지 않음
+            name: '',
           },
           locale: locale_ko_KR,
           menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter'],
           initMenu: 'filter',
           uiSize: {
-            width: '1000px',
-            height: '700px',
+            width: '1500px',
+            height: '1000px',
           },
           menuBarPosition: 'bottom',
         }}
@@ -185,6 +186,7 @@ const ImageEditorComponent = () => {
           onChange={handleImageChange}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
         >
+          <option value="">이미지 선택</option> {/* 기본 옵션 추가 */}
           {imageList.map(img => (
             <option key={img.imageName} value={img.virtualName}>
               {img.virtualName}
