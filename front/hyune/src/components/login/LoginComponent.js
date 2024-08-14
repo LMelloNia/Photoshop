@@ -31,6 +31,10 @@ const LoginComponent = () => {
         window.location.href = "http://localhost:8282/oauth2/authorization/naver";
     };
 
+    const handleClickJoin = () => {
+        navigate("/join");
+    };
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -61,7 +65,7 @@ const LoginComponent = () => {
                         onChange={handleChangeUser}
                     />
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between mb-4">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         onClick={handleClickLogin}
@@ -73,6 +77,12 @@ const LoginComponent = () => {
                         onClick={handleNaverLogin}
                     >
                         네이버 로그인
+                    </button>
+                    <button
+                        className="bg-yellow-500  hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        onClick={handleClickJoin}
+                    >
+                        회원가입
                     </button>
                 </div>
             </div>
